@@ -10,6 +10,9 @@ class Ready(commands.Cog):
         #When bot is ready
         print("Bot is ready!") 
 
+        #Change status
+        await self.client.change_presence(status=discord.Status.idle, activity=discord.Game("Hello, Dave. You're looking well today."))
+
 def setup(client):
     #pass in an instance of the class
     client.add_cog(Ready(client))
