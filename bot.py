@@ -69,5 +69,46 @@ async def clear_error(ctx,error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("You do not have permission for this command.")
 
+'''Kick and Ban'''
+#Kick
+@client.command()
+async def kick(ctx, member : discord.Member, *, reason=None):
+    #make member a discord member object
+    if (ctx.message.author.permissions_in(ctx.message.channel).manage_messages):
+        await member.kick(reason=reason)
+        await ctx.send(f"Kicked {member.mention}")
+
+@kick.error
+async def kick_error(ctx,error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You do not have permission for this command.")
+
+#Ban
+@client.command()
+async def ban(ctx, member : discord.Member, *, reason=None):
+    #make member a discord member object
+    if (ctx.message.author.permissions_in(ctx.message.channel).manage_messages):
+        await member.ban(reason=reason)
+        await ctx.send(f"Banned {member.mention}")
+
+@ban.error
+async def ban_error(ctx,error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You do not have permission for this command.")
+
+#Unban
+@client.command()
+async def unban(ctx, *, member):
+    banned_users = await ctx.guild.bans()
+    #Seperate the name and discriminator
+    member_name, member_discrimanator = member.split('#')
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_discrimanator):
+            await ctx.guild.unban(user)
+            await ctx.send(f"Unbanned {user.name}#{user.discriminator}")
+            return
 
     client.run("Insert token here")
